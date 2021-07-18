@@ -21,6 +21,7 @@ class ProfileSetupViewController: UIViewController {
 // MARK: - ViewController methods
     override func viewDidLoad() {
         super.viewDidLoad()
+        fullNameTextField.text = CardManager.shared.currentEditableContact.name.fullName
         titleLabel.style(with: K.TextStyles.heading1)
         fullNameTextField.becomeFirstResponder()
         fullNameTextField.setTextStyle(with: K.TextStyles.bodyBlack40)
@@ -29,6 +30,10 @@ class ProfileSetupViewController: UIViewController {
 
 // MARK: - Actions
     @IBAction func letsGoButtonPressed(_ sender: Any) {
+        if fullNameTextField.text!.trimmingCharacters(in: .whitespaces) == "" {
+            self.alert(title: "Error", message: "Name cannot be blank")
+            return
+        }
         self.showActivityIndicator()
         let user = User(name: fullNameTextField.text, avatarImageUrl: profilePicUrl)
         UserManager.auth.updateUser(with: user) { (error) in
